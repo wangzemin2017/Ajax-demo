@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Ajax</title>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			background-color: #F7F7F7;
+		}
+
+		h3 {
+			text-align: center;
+		}
+
+		.chatbox {
+			width: 500px;
+			height: 500px;
+			margin: 0 auto;
+			border: 1px solid #CCC;
+			background-color: #FFF;
+			border-radius: 5px;
+		}
+
+		.messages {
+			height: 350px;
+			padding: 20px 40px;
+			box-sizing: border-box;
+			border-bottom: 1px solid #CCC;
+			overflow: scroll;
+		}
+
+		.messages h5 {
+			font-size: 20px;
+			margin: 10px 0;
+		}
+
+		.messages p {
+			font-size: 18px;
+			margin: 0;
+		}
+
+		.self {
+			text-align: left;
+			background-color: rgb(137, 207, 240);
+		}
+
+		.other {
+			text-align: right;
+			background-color: pink;
+		}
+
+		.form {
+			height: 150px;
+		}
+
+		.form .input {
+			height: 110px;
+			padding: 10px;
+			box-sizing: border-box;
+		}
+
+		.form .btn {
+			height: 40px;
+			box-sizing: border-box;
+			border-top: 1px solid #CCC;
+		}
+
+		.form textarea {
+			display: block;
+			width: 100%;
+			height: 100%;
+			box-sizing: border-box;
+			border: none;
+			resize: none;
+			outline: none;
+			font-size: 20px;
+		}
+
+		.form input {
+			display: block;
+			width: 100px;
+			height: 30px;
+			margin-top: 5px;
+			margin-right: 20px;
+			float: right;
+		}
+	</style>
+</head>
+<body>
+	<h3>简单的Ajax实例</h3>
+	<div class="chatbox">
+		<div class="messages">
+			
+		</div>
+		<div class="form">
+			<div class="input">
+				<textarea></textarea>
+			</div>
+			<div class="btn">
+				<input type="button" value="发送">
+			</div>
+		</div>
+	</div>
+	<script>
+		//获取按钮和信息框
+		var btn = document.querySelector('.btn');
+		var messages = document.querySelector('.messages');
+
+		//添加按钮的监听事件
+		btn.addEventListener('click' , function(){
+			var xhr = new XMLHttpRequest();
+			var txt = document.querySelector('textarea');
+
+			//将创建的信息添加到信息框中
+			messages.appendChild(createMessage('self' , txt.value));
+
+			//post请求方式的设置
+			xhr.open('post' , 'chat.php');
+			xhr.setRequestHeader('Content-Type' , 'application/x-www-form-urlencoded');
+			xhr.send('text=' + txt.value);
+			txt.value = '';
+
+			//监听返回状态
+			xhr.onreadystatechange = function(){
+				if(xhr.readyState == 4 && xhr.status == 200){
+					var result = xhr.responseText;
+					messages.appendChild(createMessage('other' , result));
+				}
+			}
+		});
+
+		// 动态创建DOM
+		function createMessage(flag, text) {
+			// 创建结点
+			var item = document.createElement('div');
+			var h5 = document.createElement('h5');
+			var p = document.createElement('p');
+
+			// 添加类
+			item.classList.add(flag);
+
+			// 判断主体
+			switch(flag) {
+				case 'self':
+					h5.innerText = '我说';
+					break;
+				case 'other':
+					h5.innerText = '对方说';
+					break;
+			}
+
+			// 插入文本
+			p.innerHTML = text;
+
+			// 追加节点
+			item.appendChild(h5);
+			item.appendChild(p);
+
+			return item;
+
+		}
+
+	</script>
+</body>
+</html>
