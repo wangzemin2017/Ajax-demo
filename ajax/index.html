@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>JSON</title>
+	<style>
+		table {
+			width: 300px;
+			border-collapse: collapse;
+		}
+		td {
+			height: 40px;
+			text-align: center;
+			border: 1px solid #CCC;
+		}
+	</style>
+</head>
+<body>
+	<table>
+		<tr>
+			<td>王力宏</td>
+			<td>改变自已</td>
+			<td>39</td>
+			<td>男</td>
+		</tr>
+	</table>
+	<input type="button" value="屠龙宝刀，点击就送">
+	<!-- 引入Ajax文件 -->
+	<script src="./Ajax.js"></script>
+	<script>
+	var btn = document.querySelector('input');
+	btn.addEventListener('click', function(){
+		$.ajax({
+			url: 'stars.php',
+			type: 'get',
+			data: {'name': 'Jack','age': '18'},
+			success: function(result){
+				var html = '';
+				for(var i=0, len=result.length; i<len; i++){
+					html += '<tr>';
+					html += 	'<td>' + result[i].name + '</td>';
+					html += 	'<td>' + result[i].ablum + '</td>';
+					html += 	'<td>' + result[i].age + '</td>';
+					html += 	'<td>' + result[i].sex + '</td>';
+					html += '<tr>';
+				}
+				//console.log(html);
+				document.querySelector('table').innerHTML = html;
+			},
+			error: function(reason){
+				//console.log(reason);
+			}
+		});
+	});
+	</script>
+</body>
+</html>
